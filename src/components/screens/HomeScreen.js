@@ -11,7 +11,7 @@ class HomeScreen extends Component {
     return (
       <View style={{ flex: 1, justifyContent: 'center', backgroundColor: 'black' }}>
         <Text style={{
-          // fontFamily: 'DigitalDisco-Thin',
+          fontFamily: 'DigitalDisco-Thin',
           color: 'white',
           justifyContent: 'center',
           textAlign: 'center',
