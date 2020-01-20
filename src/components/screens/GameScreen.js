@@ -26,6 +26,7 @@ import {
   BALL_START_POINT_Y,
   BORDER
 } from './constants';
+import { BackArrow } from '../common';
 
 
 const engine = Matter.Engine.create({ enableSleeping: false });
@@ -58,6 +59,19 @@ class GameScreen extends PureComponent {
     }
   }
 
+  static navigationOptions = ({ navigation }) => ({
+    headerStyle: {
+      borderBottomWidth: 0,
+      backgroundColor: 'black'
+    },
+    headerLeft: (
+      <BackArrow
+        onPress={() => {
+          navigation.pop();
+        }}
+      />
+    )
+  });
 
 
   componentDidMount() {

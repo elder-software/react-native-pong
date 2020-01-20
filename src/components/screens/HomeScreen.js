@@ -15,7 +15,7 @@ class HomeScreen extends Component {
           color: 'white',
           justifyContent: 'center',
           textAlign: 'center',
-          fontSize: 40,
+          fontSize: 50,
           padding: 20
         }}>
           PONG
