@@ -1,9 +1,8 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, StatusBar, View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { GameEngine } from 'react-native-game-engine';
 import Matter from 'matter-js';
-import Box from '../common/Box';
-import Circle from '../common/Circle';
+import { Box, Circle } from '../common';
 import { MoveFinger, BallMove } from './systems'
 import {
   ball,
@@ -27,11 +26,18 @@ import {
   BORDER
 } from './constants';
 import { BackArrow } from '../common';
+import {
+  scoreTextStyle,
+  scorePlayer1ViewStyle,
+  scorePlayer2ViewStyle
+} from './styles';
 
 
+// Creates the engine and world using Matter.js
 const engine = Matter.Engine.create({ enableSleeping: false });
 const world = engine.world;
 
+// Adds all the objects to the world
 Matter.World.add(world, [
   ball,
   plankOne,
@@ -42,23 +48,21 @@ Matter.World.add(world, [
   rightWall
 ]);
 
-const planks = {
-  plankOne: plankOne,
-  plankTwo: plankTwo
-};
-
-
+/**
+ * GameScreen, where the game of pong starts. Contains the game engine determining
+ * the ball and puck movement and the components
+ */
 class GameScreen extends PureComponent {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       playerOneScore: 0,
       playerTwoScore: 0,
-      ballStartToPlayerOne: true
     }
   }
 
+  // Header used to enable navigation back the HomeScreen
   static navigationOptions = ({ navigation }) => ({
     headerStyle: {
       borderBottomWidth: 0,
@@ -75,7 +79,6 @@ class GameScreen extends PureComponent {
 
 
   componentDidMount() {
-    console.log('aqui');
     Matter.Body.setVelocity(ball, { x: 0, y: 3 });
 
     Matter.Events.on(engine, 'collisionStart', event => {
@@ -85,10 +88,8 @@ class GameScreen extends PureComponent {
       var objB = pairs[0].bodyB.label;
 
       if (objA == 'ball' && objB == 'topWall') {
-        const yah = (this.state.playerOneScore +
-          this.state.playerTwoScore + 1) % 3;
-        const changeBallStart = yah === 0;
-
+        // Detects collision between the top wall and ball, player 1 scores
+        // Increments player 1 score and restarts the ball with start position/velocity
         this.setState(
           {
             playerOneScore: this.state.playerOneScore + 1,
@@ -100,12 +101,13 @@ class GameScreen extends PureComponent {
               y: BALL_START_POINT_Y
             });
 
-
-            console.log('hahaha: ', yah);
+            // Player 1 scored, gets the serve
             Matter.Body.setVelocity(ball, { x: 0, y: 3 });
           }
         );
       } else if (objA == 'ball' && objB == 'bottomWall') {
+        // Detects collision between the bottom wall and ball, player 2 scores
+        // Increments player 2 score and restarts the ball with start position/velocity
         this.setState(
           {
             playerTwoScore: this.state.playerTwoScore + 1
@@ -115,15 +117,21 @@ class GameScreen extends PureComponent {
               x: BALL_START_POINT_X,
               y: BALL_START_POINT_Y
             });
-            const yah = (this.state.playerOneScore + this.state.playerTwoScore) % 3;
 
-            Matter.Body.setVelocity(ball, { x: 0, y: 3 });
+            // Player 2 scored, gets the serve
+            Matter.Body.setVelocity(ball, { x: 0, y: -3 });
           }
         );
       } else if (objA == 'ball' && objB == 'plankOne') {
-        const contactPointNormalised = (pairs[0].bodyA.position.x - pairs[0].bodyB.position.x) / (PLANK_WIDTH / 2 + BALL_SIZE / 2);
+        // Normalised contact point is the distance between the center of the plank
+        // and the balls contact point, value between -1 and 1
+        const contactPointNormalised = (pairs[0].bodyA.position.x -
+          pairs[0].bodyB.position.x) / (PLANK_WIDTH / 2 + BALL_SIZE / 2);
+
+        // Ball angle is the direction the ball will head in
         const ballAngle = contactPointNormalised * MAX_BALL_ANGLE;
 
+        // Calculates X and Y vectors for the ball angle and speed
         let x = BALL_SPEED * Math.sin(Math.abs(ballAngle));
         let y = BALL_SPEED * Math.cos(Math.abs(ballAngle));
 
@@ -131,9 +139,15 @@ class GameScreen extends PureComponent {
 
         Matter.Body.setVelocity(ball, { x: x, y: -Math.abs(y) });
       } else if (objA == 'ball' && objB == 'plankTwo') {
-        const contactPointNormalised = (pairs[0].bodyA.position.x - pairs[0].bodyB.position.x) / (PLANK_WIDTH / 2 + BALL_SIZE / 2);
+        // Normalised contact point is the distance between the center of the plank
+        // and the balls contact point, value between -1 and 1
+        const contactPointNormalised = (pairs[0].bodyA.position.x -
+          pairs[0].bodyB.position.x) / (PLANK_WIDTH / 2 + BALL_SIZE / 2);
+
+        // Ball angle is the direction the ball will head in
         const ballAngle = contactPointNormalised * MAX_BALL_ANGLE;
 
+        // Calculates X and Y vectors for the ball angle and speed
         let x = BALL_SPEED * Math.sin(Math.abs(ballAngle));
         let y = BALL_SPEED * Math.cos(Math.abs(ballAngle));
 
@@ -148,7 +162,8 @@ class GameScreen extends PureComponent {
   render() {
     return (
       <GameEngine
-        style={styles.container}
+        ref={this.gameEngine}
+        style={{ flex: 1, backgroundColor: 'black' }}
         systems={[MoveFinger, BallMove]}
         entities={{
           physics: {
@@ -158,67 +173,63 @@ class GameScreen extends PureComponent {
           pongBall: {
             body: ball,
             size: [BALL_SIZE, BALL_SIZE],
-            color: 'white',
+            color: '#ffffff',
             renderer: Circle
           },
           playerOnePlank: {
             body: plankOne,
             size: [PLANK_WIDTH, PLANK_HEIGHT],
-            color: 'white',
+            color: '#ffffff',
             renderer: Box,
           },
           playerTwoPlank: {
             body: plankTwo,
             size: [PLANK_WIDTH, PLANK_HEIGHT],
-            color: 'white',
+            color: '#ffffff',
             renderer: Box,
           },
           theCeiling: {
             body: topWall,
             size: [GAME_WIDTH, BORDER],
-            color: 'white',
+            color: '#ffffff',
             renderer: Box,
           },
           theFloor: {
             body: bottomWall,
             size: [GAME_WIDTH, BORDER],
-            color: 'white',
+            color: '#ffffff',
             renderer: Box,
             yAdjustment: 0
           },
           theLeftWall: {
             body: leftWall,
             size: [BORDER, GAME_HEIGHT],
-            color: 'white',
+            color: '#ffffff',
             renderer: Box,
             xAdjustment: 0
           },
           theRightWall: {
             body: rightWall,
             size: [BORDER, GAME_HEIGHT],
-            color: 'white',
+            color: '#ffffff',
             renderer: Box,
             xAdjustment: 0
-          }
+          },
         }}>
 
-        <View style={{ position: 'absolute', left: GAME_WIDTH / 2 - 30, top: GAME_HEIGHT / 2 }}>
-          <Text style={{ textAlign: 'center', color: 'white' }}>{`Player 1: ${this.state.playerOneScore}\nPlayer 2: ${this.state.playerTwoScore}`}</Text>
+        <View style={scorePlayer1ViewStyle}>
+          <Text style={scoreTextStyle}>
+            {`${this.state.playerOneScore}`}
+          </Text>
         </View>
-
-        <StatusBar hidden={true} />
-
+        <View style={scorePlayer2ViewStyle}>
+          <Text style={scoreTextStyle}>
+            {`${this.state.playerTwoScore}`}
+          </Text>
+        </View>
       </GameEngine>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'black',
-  }
-});
-
 
 export default GameScreen;

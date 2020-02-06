@@ -11,12 +11,12 @@ import {
   PUCK_BORDER_OFFSET
 } from './constants';
 
+/**
+ * all the objects that are used by Matter.js for the game engine
+ */
 
+// isStatic sets the mass and inertia to infinity
 const plankSettings = {
-  isStatic: true
-};
-
-const wallSettings = {
   isStatic: true
 };
 
@@ -59,7 +59,7 @@ export const topWall = Matter.Bodies.rectangle(
   BORDER / 2,
   GAME_WIDTH,
   BORDER,
-  { ...wallSettings, isSensor: true, label: 'topWall' }
+  { isSensor: true, label: 'topWall' }
 );
 
 export const bottomWall = Matter.Bodies.rectangle(
@@ -67,7 +67,7 @@ export const bottomWall = Matter.Bodies.rectangle(
   GAME_HEIGHT - (BORDER / 2),
   GAME_WIDTH,
   BORDER,
-  { ...wallSettings, isSensor: true, label: 'bottomWall' }
+  { isSensor: true, label: 'bottomWall' }
 );
 
 export const leftWall = Matter.Bodies.rectangle(
@@ -75,7 +75,7 @@ export const leftWall = Matter.Bodies.rectangle(
   GAME_HEIGHT / 2,
   BORDER,
   GAME_HEIGHT,
-  { ...wallSettings, label: 'leftWall' }
+  { isStatic: true, label: 'leftWall' }
 );
 
 export const rightWall = Matter.Bodies.rectangle(
@@ -83,5 +83,5 @@ export const rightWall = Matter.Bodies.rectangle(
   GAME_HEIGHT / 2,
   BORDER,
   GAME_HEIGHT,
-  { ...wallSettings, label: 'rightWall' }
+  { isStatic: true, label: 'rightWall' }
 );

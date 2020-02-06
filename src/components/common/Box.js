@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 
+/**
+ * Used to draw boxes within the react native game engine and matter.js
+ * Created using a simple View component
+ * @param props used to set component props from the calling class
+ */
 const Box = ({ body, size, xAdjustment, yAdjustment, color }) => {
   const width = size[0];
   const height = size[1];
@@ -24,4 +29,4 @@ const Box = ({ body, size, xAdjustment, yAdjustment, color }) => {
   );
 };
 
-export default Box;
+export { Box };

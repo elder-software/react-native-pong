@@ -3,8 +3,13 @@ import { Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { View, TouchableOpacity } from 'react-native';
 
+/**
+ * Simple Back Arrow button using FontAwesome from react-native-vector-icons
+ */
 const BackArrow = ({ onPress, children }) => {
   const { buttonStyle, containerStyle } = styles;
+
+  children
 
   return (
     <View style={containerStyle} >

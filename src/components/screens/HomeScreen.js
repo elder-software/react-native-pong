@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { Button } from '../common';
+import { homeScreenTitleText } from './styles';
 
+/**
+ * Home screen, contains the title "PONG" and the button "PLAY"
+ */
 class HomeScreen extends Component {
+  // Removes header from 
   static navigationOptions = {
     header: null
   }
@@ -10,21 +15,16 @@ class HomeScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1, justifyContent: 'center', backgroundColor: 'black' }}>
-        <Text style={{
-          fontFamily: 'DigitalDisco-Thin',
-          color: 'white',
-          justifyContent: 'center',
-          textAlign: 'center',
-          fontSize: 50,
-          padding: 20
-        }}>
+        <Text style={homeScreenTitleText}>
           PONG
         </Text>
-        <Button
-          style={{ flex: 0 }}
-          onPress={() => this.props.navigation.navigate('Game')}>
-          PLAY
+        <View>
+          <Button
+            style={{ flex: 0 }}
+            onPress={() => this.props.navigation.navigate('Game')}>
+            PLAY
         </Button>
+        </View>
       </View>
     );
   }

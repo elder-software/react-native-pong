@@ -1,6 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 
+/**
+ * Used to draw circles within the react native game engine and matter.js
+ * Created using a simple View component
+ * @param props used to set component props from the calling class
+ */
 const Circle = ({ body, color, size }) => {
   const { position } = body;
 
@@ -19,4 +24,4 @@ const Circle = ({ body, color, size }) => {
   );
 };
 
-export default Circle;
+export { Circle };

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, StatusBar } from 'react-native';
 import Router from './Router';
 
 class App extends Component {
@@ -9,7 +9,10 @@ class App extends Component {
 
   render() {
     return (
-      <Router />
+      <View style={{ flex: 1 }}>
+        <StatusBar barStyle='light-content' />
+        <Router />
+      </View>
     );
   }
 }
